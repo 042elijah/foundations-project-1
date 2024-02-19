@@ -1,0 +1,45 @@
+Feature
+
+
+
+A feature is a unit of functionality of a software system that satisfies a requirement, represents a design decision, and provides a potential configuration option.
+
+
+
+User Story
+
+
+
+A user story is an informal, general explanation of a software feature written from the perspective of the end user or customer. The purpose of a user story is to articulate how a piece of work will deliver a particular value back to the customer.
+
+
+
+MVP
+
+
+
+Minimum Viable Product -  a version of a product with just enough features to be usable by early customers who can then provide feedback for future product development.
+
+
+
+Stretch
+
+
+
+Stretch Goal - an optional extension feature beyond the minimum viable product requirements.
+
+
+
+Reimbursement
+
+
+
+Reimbursement is compensation paid by an organization for out-of-pocket expenses incurred or over-payment made by an employee, customer, or another party.
+
+
+
+Ticketing System
+
+
+
+A ticketing system is a software program that a support team uses to manage, process, and maintain a list (or lists) of reimbursement requests.

@@ -1,0 +1,26 @@
+{
+  "name": "foundations-project-1",
+  "version": "1.0.0",
+  "description": "This is the foundations project for Revature training Feb 2024.",
+  "main": "app.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "fp1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/042elijah/foundations-project-1.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/042elijah/foundations-project-1/issues"
+  },
+  "homepage": "https://github.com/042elijah/foundations-project-1#readme",
+  "dependencies": {
+    "jest": "^29.7.0",
+    "winston": "^3.11.0"
+  }
+}
