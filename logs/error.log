@@ -1,0 +1,14 @@
+2024-02-22T19:23:27.634Z [error]: Uncaught Exception: ReferenceError: newAccount is not defined
+2024-02-22T19:24:01.496Z [error]: Uncaught Exception: Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+2024-02-22T19:24:49.804Z [error]: Uncaught Exception: ReferenceError: newAccount is not defined
+2024-02-22T19:25:35.711Z [error]: Uncaught Exception: Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+2024-02-22T19:25:57.309Z [error]: Uncaught Exception: Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+2024-02-22T19:49:11.492Z [error]: Uncaught Exception: ReferenceError: Cannot access 'username' before initialization
+2024-02-22T19:51:27.386Z [error]: Uncaught Exception: ReferenceError: Cannot access 'username' before initialization
+2024-02-22T19:52:17.421Z [error]: Uncaught Exception: ReferenceError: Cannot access 'username' before initialization
+2024-02-22T19:53:33.840Z [error]: Uncaught Exception: ReferenceError: obj is not defined
+2024-02-22T19:59:35.116Z [error]: Uncaught Exception: ReferenceError: username is not defined
+2024-02-22T20:04:37.001Z [error]: Uncaught Exception: ReferenceError: username is not defined
+2024-02-22T20:06:24.230Z [error]: Uncaught Exception: ReferenceError: username is not defined
+2024-02-22T20:06:53.237Z [error]: Uncaught Exception: ReferenceError: username is not defined
+2024-02-22T20:07:17.082Z [error]: Uncaught Exception: ReferenceError: username is not defined
