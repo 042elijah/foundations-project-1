@@ -1,6 +1,11 @@
 const http = require('http'); //boilerplate for server stuff
 const { logger } = require("./util/logger");
+const express = require('express');
+const jwt = require('jsonwebtoken');
+
+const app = express();
 const PORT = 3000;
+const secretKey = "The value of Life is negative. The balance of being is rotated by 38 degrees.";
 /*
  ____  ____  __ __  __  _  ____   ____  _____  _  ____  __  _   ____    _____ _____  ____   __  ____  ____  _____ 
 | ===|/ () \|  |  ||  \| || _) \ / () \|_   _|| |/ () \|  \| | (_ (_`   | ()_)| () )/ () \__) || ===|/ (__`|_   _|
@@ -13,43 +18,18 @@ const PORT = 3000;
 */
 //-everything lol
 
-const server = http.createServer((req, res) => {
+app.use(express.json());
 
-    if (req.method === "GET" && req.url === "/account/login") //==================LOGIN TO AN ACCOUNT
-    {
-        return;
-    }
-    else if (req.method === "POST" && req.url === "/account/register") //==================REGISTER AN ACCOUNT
-    {
-        console.log("POST: account/register");
-
-        let body = "";
-        req.on("data", (chunk) => 
-        { 
-            body += chunk; 
-        });
-
-        req.on("end", () => 
-        {
-            if (body.length == 0)
-                logger.warn(`REGISTER AN ACCOUNT failed: Empty body!`); //move this check to the func, when it's built
-
-            let item = JSON.parse(body);
-
-            res.writeHead(201, { "Content-Type": "application/json" });
-            res.write(JSON.stringify(item));
-            res.end(JSON.stringify({ message: "Register successfully called" }));
-        });
-    }
-    else   //=================Not matching any endpoints
-    {
-        res.writeHead(404, { "Content-Type": "application/json" });
-        let data = { error: "Not Found" };
-        res.end(JSON.stringify(data));
-    }
+app.post("/account/register", async (req, res) => 
+{
+    console.log("POST: account/register")
+    const {username, password, role} = req.body;
+    //add to user list
+    res.status(201).json({ message: "User registered successfully."})
+    return;
 });
 
-server.listen(PORT, () => 
+app.listen(PORT, () => 
 {
     console.log(`Server is listening on http://localhost:${PORT}`);
 });
