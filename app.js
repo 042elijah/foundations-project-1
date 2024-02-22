@@ -1,4 +1,3 @@
-const http = require('http'); //boilerplate for server stuff
 const { logger } = require("./util/logger");
 const express = require('express');
 const jwt = require('jsonwebtoken');
