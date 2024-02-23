@@ -1,78 +1,109 @@
 const { v4: uuidv4 } = require('uuid');
+const accountDAO = require("./accountDAO");
 
 const accountList = [];
 
+
+//=======================================register a new account
 function registerAccount (account) 
 {
     //first check to see if account data is valid
-    let {integrity, integrityMessage} = verifyAccountToRegister(account); //verifyAccountToRegister returns metadata about the account data's validity/integrity
-    if (integrity == false)  
-        return {integrity, integrityMessage}; //something is wrong with the data, return message about bad integrity
+    let accountIntegrity = verifyAccountToRegister(account); //verifyAccountToRegister returns metadata about the account data's validity/integrity
+    if (accountIntegrity.integrity == false) return {account, accountIntegrity}; //something is wrong with the data, return message about bad integrity
 
     account.id = uuidv4();
-    if (account.role !== "manager")
-        account.role = "employee";
+
+    if (account.role !== "manager") account.role = "employee";
 
     accountList.push(account);
 
-    account.integrity = true;
+    accountDAO.registerAccount(account); //pass the account to the accountDAO, which will POST to the DynamoDB
 
-    return account; //account registered successfully
+    accountIntegrity.integrityMessage = "You're registered!"; //confirmation message
+
+    return {account, accountIntegrity}; //account registered successfully
 }
 
+
+//=======================================login to an account
 function logInToAccount (account) 
 {
     //first check to see if account data is valid
-    let {integrity, integrityMessage} = verifyAccountToLogIn(account); //verifyAccountToLogIn returns metadata about the account data's validity/integrity
-    if (integrity == false) 
-        return {integrity, integrityMessage}; //something is wrong with the data, return message about bad integrity
+    let accountIntegrity = verifyAccountToLogIn(account); //verifyAccountToLogIn returns metadata about the account data's validity/integrity
+    if (accountIntegrity.integrity == false) return {account, accountIntegrity}; //something is wrong with the data, return message about bad integrity
 
-     //TODO: later we're going to be adding some session stuff here. not for now though
 
-    account.integrity = true;
-    account.integrityMessage = "You're logged in!"
+     //TODO: later we're going to be adding some JWT token stuff here. not for now though
 
-    return account;
+
+     accountIntegrity.integrityMessage = "You're logged in!" //confirmation message
+
+    return {account, accountIntegrity}; //account registered successfully
 }
 
 
 
+//checks whether the paramd account is valid to add as a new user
 function verifyAccountToRegister(account) //TODO: implement better checking. data validity and that kind of thinkg
 { 
+    let accountIntegrity = {};
+
     if (!account.username || !account.password)
     {
-        account.integrity = false;
-        account.integrityMessage = "Missing username or password."
+        accountIntegrity.integrity = false;
+        accountIntegrity.integrityMessage = "Missing username or password.";
     }
-    else account.integrity = true;
+    else
+    {
+        let foundAccount = accountList.find((extantAccount) => extantAccount.username === account.username);
 
-    return account;
+        if (!foundAccount)
+        {
+            accountIntegrity.integrity = false;
+            accountIntegrity.integrityMessage = "Username taken!";
+        }
+        else accountIntegrity.integrity = true;
+    }
+
+    return accountIntegrity;
 }
 
+//checks whether the paramd account is valid to login to
 function verifyAccountToLogIn(account) //TODO: implement better checking. data validity and that kind of thinkg
 { 
+    let accountIntegrity = {}
+    
     if (!account.username || !account.password) //check to see if account has username and password
     {
-        account.integrity = false;
-        account.integrityMessage = "Missing username or password."
+        accountIntegrity.integrity = false;
+        accountIntegrity.integrityMessage = "Missing username or password.";
     }
     else //check to see if account exists in database
     {
-        console.log("2");
         let foundAccount = accountList.find((extantAccount) => extantAccount.username === account.username); //look for our username in the accountlist. if we find it, save it as foundAccount
-        console.log("2.5");
-        if (typeof foundAccount === 'undefined')
+        
+        if (!foundAccount)
         {
-            account.integrity = false;
-            account.integrityMessage = "No such username registered."
+            accountIntegrity.integrity = false;
+            accountIntegrity.integrityMessage = "No such username registered.";
         } 
-        else account.integrity = true;
+
+        else accountIntegrity.integrity = true; //passed all checks: account is good to add
     }
-    console.log("3");
-    return account;
+    return accountIntegrity;
 }
 
-module.exports ={
+
+async function getBigDude()
+{
+    let data = await accountDAO.queryEmployee("bigdude1000");
+    console.log(data);
+    return data;
+}
+
+module.exports =
+{
     registerAccount,
-    logInToAccount
+    logInToAccount,
+    getBigDude
 };
