@@ -40,13 +40,13 @@ async function queryEmployee(username) //=============================RETRIEVE A
     {
         const data = await documentClient.send(command);
 
-        let foundAccount = data.Items.find((account) => account.role === "employee"); //this is bad code, this should be handled by a scan instead, or i should seperate employees and tickets into seperate tables
+        let foundAccount = data.Items.find((account) => account.role === "employee" || account.role === "manager" ); //this is bad code, this should be handled by a scan instead, or i should seperate employees and tickets into seperate tables
 
         return foundAccount;
     } 
     catch (err) 
     {
-        console.error(`registerAccount(account) failed: ${err}`);
+        console.error(`queryEmployee(username) failed: ${err}`);
     }
     return null;
 }

@@ -33,7 +33,7 @@ app.post("/account/register", async (req, res) =>  //======================REGIS
     console.log("POST: account/register");
 
     const {username, password, name, address, role} = req.body; //destruct the stuff we want from data. doesnt matter if there's extra nonsense in there.
-    let data = accountFuncs.registerAccount({username, password, name, address, role});
+    let data = await accountFuncs.registerAccount({username, password, name, address, role});
 
     if (data.accountIntegrity.integrity == false)
     {
@@ -50,7 +50,7 @@ app.post("/account/login", async (req, res) => //======================LOGIN TO 
     console.log("POST: account/login");
 
     const {username, password} = req.body;
-    let data = accountFuncs.logInToAccount({username, password});
+    let data = await accountFuncs.logInToAccount({username, password});
 
     if (data.accountIntegrity.integrity == false)
     {
