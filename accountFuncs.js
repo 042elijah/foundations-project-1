@@ -71,7 +71,7 @@ async function logInToAccount (account)
     //first check to see if account data is valid
     let accountIntegrity = await verifyAccountToLogIn(account); //verifyAccountToLogIn returns metadata about the account data's validity/integrity
     if (accountIntegrity.integrity == false) return {account, accountIntegrity}; //something is wrong with the data, return message about bad integrity
-    
+
      //TODO: later we're going to be adding some JWT token stuff here. not for now though
 
     accountIntegrity.integrity = true; //confirmation
@@ -82,7 +82,7 @@ async function logInToAccount (account)
 
 //checks whether the paramd account is valid to login to
 async function verifyAccountToLogIn(account) //TODO: implement better checking. data validity and that kind of thinkg
-{ L
+{ 
     let accountIntegrity = {}
     
     if (!account.username || !account.password) //check to see if account has username and password
