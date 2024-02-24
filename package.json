@@ -7,7 +7,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "fp1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
