@@ -66,7 +66,7 @@ describe("accountFuncs.verifyAccountToRegister(account) testing", () =>
 //========================================================================cleanAccountToRegister(account) 
 describe("accountFuncs.cleanAccountToRegister(account)  testing", () => 
 {
-    test("Account w/ uname and pword should return id and role added", () => 
+    test("Account w/ uname,pword should return id and role added", () => 
     {
         let result = accountFuncs.cleanAccountToRegister(validAccounts[0]);
         expect(result).toEqual({
@@ -75,7 +75,7 @@ describe("accountFuncs.cleanAccountToRegister(account)  testing", () =>
         });
     });
 
-    test("Account w/ uname, pword, adrs, name, and role should return id added", () => 
+    test("Account w/ uname,pword,adrs,name,role should return id added", () => 
     {
         let result = accountFuncs.cleanAccountToRegister(validAccounts[1]);
         expect(result).toEqual({
@@ -100,5 +100,43 @@ describe("accountFuncs.cleanAccountToRegister(account)  testing", () =>
              username: "a", password: "b",
              id: expect.anything(), role: "employee"
         });
+    });
+});
+
+let loginAccounts = [
+    {username: "john_doe", password: "a"}, //valid
+    { username: "frank18", password: "TH3FR4NKS7ER!"}, //invalid
+    { username: "", password: "b" }, //invalid
+    { username: "a", password: "" } //invalid
+]
+
+//========================================================================ASYNC verifyAccountToLogIn(account)
+describe("accountFuncs.verifyAccountToLogIn(account) testing", () => 
+{
+    //======================================================================VALID
+    test("Valid account should return true", async () => 
+    {
+        let result = await accountFuncs.verifyAccountToLogIn(loginAccounts[0]);
+        expect(result.integrity).toBe(true);
+    });
+
+    //======================================================================INVALID
+    test("Invalid account should return false", async () => 
+    {
+        let result = await accountFuncs.verifyAccountToLogIn(loginAccounts[1]);
+        expect(result.integrity).toBe(false);
+        expect(result.integrityMessage).toEqual("No such username registered.");
+    });
+    test("Invalid account should return false", async () => 
+    {
+        let result = await accountFuncs.verifyAccountToLogIn(loginAccounts[2]);
+        expect(result.integrity).toBe(false);
+        expect(result.integrityMessage).toEqual("Missing username or password.");
+    });
+    test("Invalid account should return false", async () => 
+    {
+        let result = await accountFuncs.verifyAccountToLogIn(loginAccounts[3]);
+        expect(result.integrity).toBe(false);
+        expect(result.integrityMessage).toEqual("Missing username or password.");
     });
 });
