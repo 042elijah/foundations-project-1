@@ -1,36 +1,36 @@
 const { v4: uuidv4 } = require('uuid');
+const jwt = require('jsonwebtoken');
 const accountDAO = require("./accountDAO");
-
-const accountList = [];
-
+const { secretKey } = require("./secretKey");
 
 //=======================================REGISTER A NEW ACCOUNT
 //=====================================================================================================================
 async function registerAccount (account) 
 {
     //first check to see if account data is valid
-    let accountIntegrity = await verifyAccountToRegister(account); //verifyAccountToRegister(account) will return metadata about the account's validity/integrity
-    if (accountIntegrity.integrity == false) return {account, accountIntegrity}; //something is wrong with the data, return a message about bad integrity
+    let accountIsValid = await verifyAccountToRegister(account); //verifyAccountToRegister(account) will return metadata about the account's validity/integrity
+    if (!accountIsValid.isValid ) return accountIsValid; //something is wrong with the data, return a message about bad integrity
 
     account = cleanAccountToRegister(account); //add id and role(if needed), and wash off unneeded params
 
     accountDAO.registerAccount(account); //pass the account to the accountDAO, which will POST to the DynamoDB
 
-    accountIntegrity.integrity = true; //confirmation
-    accountIntegrity.integrityMessage = "You're registered!"; //confirmation message
+    accountIsValid.isValid  = true; //confirmation
+    accountIsValid.message = "You're registered!"; //confirmation message
 
-    return {account, accountIntegrity}; //account registered successfully
+    return accountIsValid; //account registered successfully
 }
 
 //checks whether the paramd account is valid to add as a new user
+//TESTED
 async function verifyAccountToRegister(account) //TODO: implement better checking. data validity and that kind of thinkg
 { 
-    let accountIntegrity = {};
+    let accountIsValid = {};
 
     if (!account.username || !account.password) //must have username and password, otherwise fail
     {
-        accountIntegrity.integrity = false;
-        accountIntegrity.integrityMessage = "Missing username or password.";
+        accountIsValid.isValid  = false;
+        accountIsValid.message = "Missing username or password.";
     }
     else
     {
@@ -38,17 +38,19 @@ async function verifyAccountToRegister(account) //TODO: implement better checkin
 
         if (foundAccount) //if we found an entry with that username, it's taken. fail.
         {
-            accountIntegrity.integrity = false;
-            accountIntegrity.integrityMessage = "Username taken!";
+            accountIsValid.isValid = false;
+            accountIsValid.message = "Username taken!";
         }
-        else accountIntegrity.integrity = true;
+        else accountIsValid.isValid  = true;
     }
 
     return accountIntegrity;
 }
 
+
 //takes an account and washes off extra data + adds needed data to be registered to the database
 //expects the params that do exist and are needed to be valid. verifyAccountToRegister(account) handles that part.
+//TESTED
 function cleanAccountToRegister(account) 
 {
     let cleanedAccount = {username: account.username, password: account.password};
@@ -69,26 +71,32 @@ function cleanAccountToRegister(account)
 async function logInToAccount (account) 
 {
     //first check to see if account data is valid
-    let accountIntegrity = await verifyAccountToLogIn(account); //verifyAccountToLogIn returns metadata about the account data's validity/integrity
-    if (accountIntegrity.integrity == false) return {account, accountIntegrity}; //something is wrong with the data, return message about bad integrity
+    let accountIsValid = await verifyAccountToLogIn(account); //verifyAccountToLogIn returns metadata about the account data's validity/integrity
+    if (accountIsValid.isValid == false) return accountIsValid; //something is wrong with the data, return message about bad integrity
 
-     //TODO: later we're going to be adding some JWT token stuff here. not for now though
+    const token = jwt.sign(
+        { id: account.username },
+        secretKey,
+        { expiresIn: "60m" }
+    );
 
-    accountIntegrity.integrity = true; //confirmation
-    accountIntegrity.integrityMessage = "You're logged in!" //confirmation message
+    accountIsValid.isValid = true; //confirmation
+    accountIsValid.isValid = "You're logged in!" //confirmation message
 
-    return {account, accountIntegrity}; //account registered successfully
+    return {...accountIsValid , token}; //account registered successfully
 }
 
+
 //checks whether the paramd account is valid to login to
-async function verifyAccountToLogIn(account) //TODO: implement better checking. data validity and that kind of thinkg
+//TESTED
+async function verifyAccountToLogIn(account) //TODO: implement better checking. data validity and that kind of thing
 { 
-    let accountIntegrity = {}
+    let accountIsValid = {};
     
     if (!account.username || !account.password) //check to see if account has username and password
     {
-        accountIntegrity.integrity = false;
-        accountIntegrity.integrityMessage = "Missing username or password.";
+        accountIsValid.isValid  = false;
+        accountIsValid.message = "Missing username or password.";
     }
     else //check to see if account exists in database
     {
@@ -96,21 +104,42 @@ async function verifyAccountToLogIn(account) //TODO: implement better checking. 
         
         if (!foundAccount) //if foundAccount is empty, that account name doesnt exist in the db. fail.
         {
-            accountIntegrity.integrity = false;
-            accountIntegrity.integrityMessage = "No such username registered.";
+            accountIsValid.isValid = false;
+            accountIsValid.message = "No such username registered.";
         } 
 
-        else accountIntegrity.integrity = true; //passed all checks: account is good to add
+        else //we're not comparing passwords? TODO
+        {
+            accountIsValid.isValid = true; //passed all checks: account is good to add
+            accountIsValid.message = "Username found.";
+            console.log("authed");
+        }
     }
-    return accountIntegrity;
+    return accountIsValid;
 }
 
-
-async function getBigDude()
+//middleware
+//compare request token to held token. returns tokenValidity object like {isValid: bool, validityMessage: string}
+function authenticateToken(req, res, next) 
 {
-    let data = await accountDAO.queryEmployee("bigdude1000");
-    console.log(data);
-    return data;
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+
+    if(!token)
+    {
+        res.status(401).json({ message: "Unauthorized Access", token });
+        return;
+    }
+
+    jwt.verify(token, secretKey, (err, user) => {
+        if(err)
+        {
+            res.status(403).json({ message: "Forbidden Access" });
+            return;
+        }
+        req.user = user;
+        next();
+    });
 }
 
 module.exports =
@@ -120,5 +149,5 @@ module.exports =
     cleanAccountToRegister,
     logInToAccount,
     verifyAccountToLogIn,
-    getBigDude
+    authenticateToken
 };

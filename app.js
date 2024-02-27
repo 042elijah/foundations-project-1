@@ -3,10 +3,11 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 
 const accountFuncs = require("./accountFuncs");
+const employeeFuncs = require("./employeeFuncs");
+const managerFuncs = require("./managerFuncs");
 const app = express();
 const PORT = 3000;
 
-const secretKey = "The value of Life is negative. The balance of being is rotated by 38 degrees.";
 /*
  ____  ____  __ __  __  _  ____   ____  _____  _  ____  __  _   ____    _____ _____  ____   __  ____  ____  _____ 
 | ===|/ () \|  |  ||  \| || _) \ / () \|_   _|| |/ () \|  \| | (_ (_`   | ()_)| () )/ () \__) || ===|/ (__`|_   _|
@@ -17,7 +18,7 @@ const secretKey = "The value of Life is negative. The balance of being is rotate
     |    |     | |     \ |     |
     |    |_____| |_____/ |_____|
 */
-//-everything lol
+//-implement JWT auth
 
 app.use(express.json());
 
@@ -35,7 +36,7 @@ app.post("/account/register", async (req, res) =>  //======================REGIS
     const {username, password, name, address, role} = req.body; //destruct the stuff we want from data. doesnt matter if there's extra nonsense in there.
     let data = await accountFuncs.registerAccount({username, password, name, address, role});
 
-    if (data.accountIntegrity.integrity == false)
+    if (!data.isValid)
     {
         res.status(400).json({ message: "User registration failed.", data});
         return; //this is needed to not crash the run
@@ -52,30 +53,31 @@ app.post("/account/login", async (req, res) => //======================LOGIN TO 
     const {username, password} = req.body;
     let data = await accountFuncs.logInToAccount({username, password});
 
-    if (data.accountIntegrity.integrity == false)
+    if (!data.isValid)
     {
-        res.status(400).json({ message: "User login failed.", data});
+        res.status(400).json({ message: "User login failed.", data });
         return; //this is needed to not crash the run
     }
 
-    res.status(201).json({ message: "User logged-in successfully.", data});
+    res.status(201).json({ message: "User logged-in successfully.", token: data.token });
 });
 
-app.post("/bigdude", async (req, res) => //======================TEST: GET BIG DUDE 1000
+
+app.post("/account/ticket/submit", accountFuncs.authenticateToken, async (req, res) => //======================CREATE A TICKET
 {
-    console.log("GET: BIG DUDE");
+    console.log("POST: account/ticket/submit");
 
-    let data = await accountFuncs.getBigDude();
+    const ticket = {...req.body, username: req.user.id};
+    let data = await employeeFuncs.submitTicket( ticket );
 
-    if (!data)
+    if (!data.isValid)
     {
-        res.status(400).json({ message: "GET failed.", data});
+        res.status(400).json({ message: "Ticket submission failed.", data });
         return; //this is needed to not crash the run
     }
 
-    res.status(201).json({ message: "WE GOT BIG DUDE!", data});
+    res.status(201).json({ message: "Ticket submission success.", data });
 });
-
 
 app.listen(PORT, () => 
 {
