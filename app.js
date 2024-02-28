@@ -79,6 +79,21 @@ app.post("/account/ticket/submit", accountFuncs.authenticateToken, async (req, r
     res.status(201).json({ message: "Ticket submission success.", data });
 });
 
+app.get("/account/ticket/list", accountFuncs.authenticateToken, async (req, res) => //======================CREATE A TICKET
+{
+    console.log("GET: account/ticket/list");
+
+    let data = await employeeFuncs.viewTickets( req.user.id );
+
+    if (!data)
+    {
+        res.status(400).json({ message: "Ticket get-all failed.", data });
+        return; //this is needed to not crash the run
+    }
+
+    res.status(201).json({ message: "Ticket get-all success.", data });
+});
+
 app.listen(PORT, () => 
 {
     console.log(`Server is listening on http://localhost:${PORT}`);

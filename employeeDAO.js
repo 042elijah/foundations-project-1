@@ -27,10 +27,36 @@ async function putTicket (ticket) //=============================ADD NEW TICKET
     return null;
 }
 
+async function queryTickets (username) //=============================RETRIEVE ALL TICKETS BY EMPLOYEE'S USERNAME
+{
+    const command = new QueryCommand({
+        TableName,
+        KeyConditionExpression: "#username = :username",
+        ExpressionAttributeNames: { "#username": "username", },
+        ExpressionAttributeValues: { ":username": username },
+    });
 
+    try
+    {
+        const data = await documentClient.send(command);
+
+        let ticketsAr = [];
+        for (let i = 0; i < data.Items.length; i++)
+            if(data.Items[i].role === "ticket")
+                ticketsAr.push({ ...(data.Items[i]) }); //here, im trying to shallow copy the Item. Don't know if this is needed or if it works.
+
+        return ticketsAr;
+    } 
+    catch (err) 
+    {
+        console.error(`queryTickets(username) failed: ${err}`);
+    }
+    return null;
+}
 
 
 module.exports = 
 { 
-    putTicket
+    putTicket,
+    queryTickets
 };
