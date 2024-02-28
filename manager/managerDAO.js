@@ -2,9 +2,7 @@ const { DynamoDBClient, ScanCommand } = require('@aws-sdk/client-dynamodb');
 const { DynamoDBDocumentClient, GetCommand, QueryCommand, PutCommand, UpdateCommand, DeleteCommand } = require('@aws-sdk/lib-dynamodb');
 
 const client = new DynamoDBClient({region: 'us-east-2'});
-
 const documentClient = DynamoDBDocumentClient.from(client);
-
 const TableName = 'foundations-project-1-database';
 
 
@@ -36,6 +34,7 @@ async function getAllPendingTickets ()
     }
     return null;
 }
+
 
 async function putTicketApproval (ticket) //=============================ADD NEW ACCOUNT
 {

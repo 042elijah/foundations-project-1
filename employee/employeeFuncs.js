@@ -45,6 +45,7 @@ function verifyTicketToSubmit (ticket)
     return ticketIsValid;
 }
 
+
 function cleanTicketToAdd(ticket) 
 {
     let cleanedTicket = { // is this kludge? idk.

@@ -1,13 +1,12 @@
 const { v4: uuidv4 } = require('uuid');
-//const jwt = require('jsonwebtoken');
 const managerDAO = require("./managerDAO");
 
-//const date = new Date();
 
 async function getAllPendingTickets ()
 {
     return await managerDAO.getAllPendingTickets();
 }
+
 
 async function putTicketApproval (ticket)
 {
@@ -20,6 +19,7 @@ async function putTicketApproval (ticket)
     
     return {...ticketIsValid, newTicket};
 }
+
 
 async function verifyTicketForTicketApproval (ticket)
 {
@@ -59,6 +59,7 @@ async function verifyTicketForTicketApproval (ticket)
     
     return ticketIsValid;
 }
+
 
 function cleanTicketForTicketApproval(ticket)
 {

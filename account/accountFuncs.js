@@ -21,6 +21,7 @@ async function registerAccount (account)
     return accountIsValid; //account registered successfully
 }
 
+
 //checks whether the paramd account is valid to add as a new user
 //TESTED
 async function verifyAccountToRegister(account) //TODO: implement better checking. data validity and that kind of thinkg
@@ -122,6 +123,7 @@ async function verifyAccountToLogIn(account) //TODO: implement better checking. 
     return accountIsValid;
 }
 
+
 //middleware
 //compare request token to held token. returns tokenValidity object like {isValid: bool, validityMessage: string}
 function authenticateToken(req, res, next) 
@@ -145,6 +147,7 @@ function authenticateToken(req, res, next)
         next();
     });
 }
+
 
 module.exports =
 {
