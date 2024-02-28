@@ -8,12 +8,12 @@ const date = new Date();
 async function submitTicket (ticket) //===============================POST NEW TICKET
 {
     let ticketIsValid = await verifyTicketToSubmit(ticket);
-    if (!ticketIsValid.isValid ) return ticketIsValid;
+    if (!ticketIsValid.isValid ) return ticketIsValid; //bad ticket, return fail-state metadata
 
     let cleanedTicket = cleanTicketToAdd(ticket);
     let putTicketData = employeeDAO.putTicket(cleanedTicket);
 
-    return {...cleanedTicket, ...ticketIsValid, ...putTicketData};
+    return {...cleanedTicket, ...ticketIsValid, ...putTicketData}; //just return everything, idc
 }
 
 

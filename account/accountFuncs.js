@@ -1,7 +1,7 @@
 const { v4: uuidv4 } = require('uuid');
 const jwt = require('jsonwebtoken');
 const accountDAO = require("./accountDAO");
-const { secretKey } = require("./secretKey");
+const { secretKey } = require("../secretKey");
 
 //=======================================REGISTER A NEW ACCOUNT
 //=====================================================================================================================
@@ -44,7 +44,7 @@ async function verifyAccountToRegister(account) //TODO: implement better checkin
         else accountIsValid.isValid  = true;
     }
 
-    return accountIntegrity;
+    return accountIsValid;
 }
 
 
@@ -107,12 +107,16 @@ async function verifyAccountToLogIn(account) //TODO: implement better checking. 
             accountIsValid.isValid = false;
             accountIsValid.message = "No such username registered.";
         } 
-
-        else //we're not comparing passwords? TODO
+        else if (account.username !== foundAccount.username || account.password !== foundAccount.password) //if foundAccount is empty, that account name doesnt exist in the db. fail.
+        {
+            accountIsValid.isValid = false;
+            accountIsValid.message = "Username and password don't match!";
+        } 
+        else 
         {
             accountIsValid.isValid = true; //passed all checks: account is good to add
             accountIsValid.message = "Username found.";
-            console.log("authed");
+            console.log("-authed-");
         }
     }
     return accountIsValid;
