@@ -2,9 +2,9 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 
-const accountFuncs = require("./accountFuncs");
-const employeeFuncs = require("./employeeFuncs");
-const managerFuncs = require("./managerFuncs");
+const accountFuncs = require("./account/accountFuncs");
+const employeeFuncs = require("./employee/employeeFuncs");
+const managerFuncs = require("./manager/managerFuncs");
 const app = express();
 const PORT = 3000;
 
@@ -18,7 +18,8 @@ const PORT = 3000;
     |    |     | |     \ |     |
     |    |_____| |_____/ |_____|
 */
-//-implement JWT auth
+//-implement further jest testing
+//-implement bcrypt on passwords
 
 app.use(express.json());
 
@@ -29,6 +30,7 @@ app.get("/", (req, res) => //======================DEFAULT
 });
 
 
+//GENERAL ACCOUNT FUNCS
 app.post("/account/register", async (req, res) =>  //======================REGISTER AN ACCOUNT
 {
     console.log("POST: account/register");
@@ -63,6 +65,8 @@ app.post("/account/login", async (req, res) => //======================LOGIN TO 
 });
 
 
+
+//EMPLOYEE FUNCS
 app.post("/account/ticket/submit", accountFuncs.authenticateToken, async (req, res) => //======================CREATE A TICKET
 {
     console.log("POST: account/ticket/submit");
@@ -92,6 +96,42 @@ app.get("/account/ticket/list", accountFuncs.authenticateToken, async (req, res)
     }
 
     res.status(201).json({ message: "Ticket get-all success.", data });
+});
+
+
+
+//MANAGER FUNCS
+//still need to check if the user is a manager. could do through middleware, or maybe add role to the jwt
+app.get("/manager/ticket/list", accountFuncs.authenticateToken, async (req, res) => //======================GET ALL PENDING TICKETS
+{
+    console.log("GET: manager/ticket/list");
+
+    let data = await managerFuncs.getAllPendingTickets();
+
+    if (!data)
+    {
+        res.status(400).json({ message: "Ticket get-all failed.", data });
+        return; //this is needed to not crash the run
+    }
+
+    res.status(201).json({ message: "Ticket get-all success.", data });
+});
+
+app.put("/manager/ticket", accountFuncs.authenticateToken, async (req, res) => //======================UPDATE A TICKET
+{
+    console.log("PUT: manager/ticket");
+
+    const ticket = {...req.body, manager_username: req.user.id}; //i think ticket will need: employee username, ticket id, isApproved, & manager_username (autopopped)
+
+    let data = await managerFuncs.putTicketApproval(ticket);
+
+    if (!data || !data.isValid)
+    {
+        res.status(400).json({ message: "Put ticket approval failed.", data });
+        return; //this is needed to not crash the run
+    }
+
+    res.status(201).json({ message: "Put ticket approval success.", data });
 });
 
 app.listen(PORT, () => 

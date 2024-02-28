@@ -2,6 +2,4 @@
 node_modules/
 
 /secretKey.js
-.vs/slnx.sqlite
-.vs/VSWorkspaceState.json
-.vs/foundations-project-1/v15/.suo
+.vs
