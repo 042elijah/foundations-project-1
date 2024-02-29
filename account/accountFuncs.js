@@ -1,5 +1,6 @@
 const { v4: uuidv4 } = require('uuid');
 const jwt = require('jsonwebtoken');
+const bcrypt = require("bcrypt");
 const accountDAO = require("./accountDAO");
 const { secretKey } = require("../secretKey");
 
@@ -11,14 +12,22 @@ async function registerAccount (account)
     let accountIsValid = await verifyAccountToRegister(account); //verifyAccountToRegister(account) will return metadata about the account's validity/integrity
     if (!accountIsValid.isValid ) return accountIsValid; //something is wrong with the data, return a message about bad integrity
 
-    account = cleanAccountToRegister(account); //add id and role(if needed), and wash off unneeded params
+    account = await cleanAccountToRegister(account); //add id and role(if needed), and wash off unneeded params
+    
+    let result = accountDAO.registerAccount(account); //pass the account to the accountDAO, which will POST to the DynamoDB
 
-    accountDAO.registerAccount(account); //pass the account to the accountDAO, which will POST to the DynamoDB
+    if (!result)
+    {
+        accountIsValid.isValid  = false; //confirmation
+        accountIsValid.message = "accountDAO.registerAccount(account) failed."; //confirmation message
+    }
+    else
+    {
+        accountIsValid.isValid  = true; //confirmation
+        accountIsValid.message = "You're registered!"; //confirmation message
+    }
 
-    accountIsValid.isValid  = true; //confirmation
-    accountIsValid.message = "You're registered!"; //confirmation message
-
-    return accountIsValid; //account registered successfully
+    return {...accountIsValid, result}; //account registered successfully
 }
 
 
@@ -52,10 +61,13 @@ async function verifyAccountToRegister(account) //TODO: implement better checkin
 //takes an account and washes off extra data + adds needed data to be registered to the database
 //expects the params that do exist and are needed to be valid. verifyAccountToRegister(account) handles that part.
 //TESTED
-function cleanAccountToRegister(account) 
+async function cleanAccountToRegister(account) 
 {
-    let cleanedAccount = {username: account.username, password: account.password};
-    
+    const cleanedAccount = {username: account.username};
+
+    let encryptedPassword = await bcrypt.hash(account.password, 10); //bcrypt the password
+    cleanedAccount.password = encryptedPassword;
+
     cleanedAccount.address = account.address; //this still works if these params arent there
     cleanedAccount.name = account.name;
 
@@ -88,7 +100,7 @@ async function logInToAccount (account)
 }
 
 
-//checks whether the paramd account is valid to login to
+//checks whether the paramd account is valid, and if it matches the account in the db
 //TESTED
 async function verifyAccountToLogIn(account) //TODO: implement better checking. more data validity and that kind of thing
 { 
@@ -110,7 +122,7 @@ async function verifyAccountToLogIn(account) //TODO: implement better checking. 
             accountIsValid.message = "No such username registered.";
             return accountIsValid;
         } 
-        else if (account.username !== foundAccount.username || account.password !== foundAccount.password) //if foundAccount is empty, that account name doesnt exist in the db. fail.
+        else if (account.username !== foundAccount.username || !(await bcrypt.compare(account.password, foundAccount.password))) //if foundAccount is empty, that account name doesnt exist in the db. fail.
         {
             accountIsValid.isValid = false;
             accountIsValid.message = "Username and password don't match!";
