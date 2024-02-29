@@ -10,7 +10,7 @@ async function submitTicket (ticket) //===============================POST NEW T
     let ticketIsValid = await verifyTicketToSubmit(ticket);
     if (!ticketIsValid.isValid ) return ticketIsValid; //bad ticket, return fail-state metadata
 
-    let cleanedTicket = cleanTicketToAdd(ticket);
+    let cleanedTicket = cleanTicketToSubmit(ticket);
     let putTicketData = employeeDAO.putTicket(cleanedTicket);
 
     return {...cleanedTicket, ...ticketIsValid, ...putTicketData}; //just return everything, idc
@@ -49,7 +49,7 @@ function verifyTicketToSubmit (ticket)
 
 
 //take some raw data and make sure it conforms to the specific values we want in the database
-function cleanTicketToAdd(ticket) 
+function cleanTicketToSubmit(ticket) 
 {
     let cleanedTicket = { // is this kludge? idk.
         username: ticket.username,  //should be autopopped if we passed authentication
@@ -79,5 +79,7 @@ async function viewTickets (username) //===============================GET ALL T
 module.exports =
 {
     submitTicket,
-    viewTickets
+    viewTickets,
+    verifyTicketToSubmit,
+    cleanTicketToSubmit
 };
