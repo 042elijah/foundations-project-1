@@ -1,4 +1,6 @@
 const { v4: uuidv4 } = require('uuid');
+
+const { logger } = require("../util/logger");
 const managerDAO = require("./managerDAO");
 
 //simply get array of all pending tickets
@@ -84,8 +86,8 @@ function cleanTicketForTicketApproval(ticket)
     return cleanedTicket; //we're implicitly removing unneeded data by not adding it to cleanedTicket
 }
 
-//currently just a utility func for testing.
-async function deleteTicket(ticket)
+
+async function deleteTicket(ticket)  //exists purely for testing
 {
     return await managerDAO.deleteTicket(ticket);
 }

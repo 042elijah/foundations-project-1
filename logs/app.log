@@ -12,3 +12,45 @@
 2024-02-22T20:06:24.230Z [error]: Uncaught Exception: ReferenceError: username is not defined
 2024-02-22T20:06:53.237Z [error]: Uncaught Exception: ReferenceError: username is not defined
 2024-02-22T20:07:17.082Z [error]: Uncaught Exception: ReferenceError: username is not defined
+2024-02-29T20:18:28.274Z [info]: POST: account/register
+2024-02-29T20:19:25.551Z [info]: POST: account/login
+2024-02-29T20:19:48.067Z [info]: POST: account/login
+2024-02-29T20:19:48.246Z [warn]:    POST failed: Username and password don't match!
+2024-02-29T20:19:53.938Z [info]: POST: account/login
+2024-02-29T20:19:54.044Z [warn]:    POST failed: No such username registered.
+2024-02-29T20:20:15.914Z [info]: POST: account/ticket/submit
+2024-02-29T20:28:20.704Z [info]: POST: account/login
+2024-02-29T20:28:47.745Z [info]: POST: account/login
+2024-02-29T20:28:57.223Z [info]: POST: account/login
+2024-02-29T20:28:57.393Z [warn]: u:bigdude1000:   POST failed: Username and password don't match!
+2024-02-29T20:29:10.917Z [info]: POST: account/login
+2024-02-29T20:29:11.074Z [warn]: u:bigdude1000:   POST failed: Username and password don't match!
+2024-02-29T20:29:11.987Z [info]: POST: account/login
+2024-02-29T20:29:12.153Z [warn]: u:bigdude1000:   POST failed: Username and password don't match!
+2024-02-29T20:29:18.404Z [info]: POST: account/login
+2024-02-29T20:29:18.503Z [warn]: u:bigfella1234:   POST failed: No such username registered.
+2024-02-29T20:29:56.980Z [info]: POST: account/ticket/submit
+2024-02-29T20:30:26.536Z [warn]:    Unauthed Access: No token?
+2024-02-29T20:30:29.853Z [info]: GET: account/ticket/list
+2024-02-29T20:30:46.279Z [info]: GET: manager/ticket/list
+2024-02-29T20:30:55.122Z [info]: GET: manager/ticket/list
+2024-02-29T20:31:20.867Z [info]: POST: account/login
+2024-02-29T20:31:36.425Z [info]: GET: manager/ticket/list
+2024-02-29T20:31:36.425Z [warn]: u:john_doe:   GET failed, user not a manager!
+2024-02-29T20:33:12.567Z [info]: GET: manager/ticket/list
+2024-02-29T20:33:12.570Z [warn]: u:john_doe:   
+            GET failed, user not a manager!
+2024-02-29T20:33:22.643Z [info]: POST: account/login
+2024-02-29T20:33:23.110Z [warn]: u:bigdude1000:   
+            POST failed: Username and password don't match!
+2024-02-29T20:33:27.662Z [info]: POST: account/login
+2024-02-29T20:33:27.757Z [warn]: u:bigfella1234:   
+            POST failed: No such username registered.
+2024-02-29T20:33:30.381Z [info]: PUT: manager/ticket
+2024-02-29T20:33:30.382Z [warn]: u:john_doe:   
+            PUT failed, user not a manager!
+2024-02-29T20:33:46.625Z [info]: PUT: manager/ticket
+2024-02-29T20:33:48.651Z [info]: PUT: manager/ticket
+2024-02-29T20:33:48.745Z [warn]: u:w1ldch1ld:   
+            PUT failed: Couldn't find that ticket in the database.
+2024-02-29T20:33:51.775Z [info]: POST: account/login

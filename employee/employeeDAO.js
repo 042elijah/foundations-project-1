@@ -1,6 +1,8 @@
 const { DynamoDBClient, ScanCommand } = require('@aws-sdk/client-dynamodb');
 const { DynamoDBDocumentClient, GetCommand, QueryCommand, PutCommand, UpdateCommand, DeleteCommand } = require('@aws-sdk/lib-dynamodb');
 
+const { logger } = require("../util/logger");
+
 const client = new DynamoDBClient({region: 'us-east-2'});
 const documentClient = DynamoDBDocumentClient.from(client);
 const TableName = 'foundations-project-1-database';
@@ -20,6 +22,7 @@ async function putTicket (ticket) //=============================ADD NEW TICKET
     } 
     catch (err) 
     {
+        logger.error(`putTicket(ticket) failed: ${err}`);
         console.error(`putTicket(ticket) failed: ${err}`);
     }
     return null;
@@ -48,6 +51,7 @@ async function queryTickets (username) //=============================RETRIEVE A
     } 
     catch (err) 
     {
+        logger.error(`queryTickets(username) failed: ${err}`);
         console.error(`queryTickets(username) failed: ${err}`);
     }
     return null;

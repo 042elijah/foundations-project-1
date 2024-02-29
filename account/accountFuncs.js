@@ -1,6 +1,8 @@
 const { v4: uuidv4 } = require('uuid');
 const jwt = require('jsonwebtoken');
 const bcrypt = require("bcrypt");
+
+const { logger } = require("../util/logger");
 const accountDAO = require("./accountDAO");
 const { secretKey } = require("../secretKey");
 
@@ -148,6 +150,8 @@ function authenticateToken(req, res, next)
 
     if(!token)
     {
+        logger.warn(`   
+            Unauthed Access: No token?`);
         res.status(401).json({ message: "Unauthorized Access", token });
         return;
     }
@@ -155,6 +159,8 @@ function authenticateToken(req, res, next)
     jwt.verify(token, secretKey, (err, user) => {
         if(err)
         {
+            logger.warn(`   
+                Forbidden Access`);
             res.status(403).json({ message: "Forbidden Access" });
             return;
         }

@@ -1,6 +1,8 @@
 const { v4: uuidv4 } = require('uuid');
 const jwt = require('jsonwebtoken');
+
 const employeeDAO = require("./employeeDAO");
+const { logger } = require("../util/logger");
 
 const date = new Date();
 

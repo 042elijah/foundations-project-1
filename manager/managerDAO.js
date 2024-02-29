@@ -1,6 +1,8 @@
 const { DynamoDBClient, ScanCommand } = require('@aws-sdk/client-dynamodb');
 const { DynamoDBDocumentClient, GetCommand, QueryCommand, PutCommand, UpdateCommand, DeleteCommand } = require('@aws-sdk/lib-dynamodb');
 
+const { logger } = require("../util/logger");
+
 const client = new DynamoDBClient({region: 'us-east-2'});
 const documentClient = DynamoDBDocumentClient.from(client);
 const TableName = 'foundations-project-1-database';
@@ -30,6 +32,7 @@ async function getAllPendingTickets ()
     } 
     catch (err) 
     {
+        logger.error(`getAllPendingTickets() failed: ${err}`);
         console.error(`getAllPendingTickets() failed: ${err}`);
     }
     return null;
@@ -60,12 +63,13 @@ async function putTicketApproval (ticket) //=============================ADD NEW
     } 
     catch (err) 
     {
+        logger.error(`putTicketApproval () failed: ${err}`);
         console.error(`putTicketApproval () failed: ${err}`);
     }
     return null;
 }
 
-async function deleteTicket(ticket)
+async function deleteTicket(ticket) //exists purely for testing
 {
     const command = new DeleteCommand({
         TableName,

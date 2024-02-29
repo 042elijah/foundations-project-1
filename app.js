@@ -1,4 +1,4 @@
-//const { logger } = require("./util/logger");
+const { logger } = require("./util/logger");
 const express = require('express');
 const jwt = require('jsonwebtoken');
 
@@ -18,7 +18,6 @@ const PORT = 3000;
     |    |     | |     \ |     |
     |    |_____| |_____/ |_____|
 
--implement winston
 -queryEmployees currently returns all data for all calls. should add seperate versions of this call that only return required data
 -broadly implement stronger type checking
 */
@@ -35,13 +34,15 @@ app.get("/", (req, res) => //======================DEFAULT
 //============================================GENERAL ACCOUNT FUNCS
 app.post("/account/register", async (req, res) =>  //======================REGISTER AN ACCOUNT
 {
-    console.log("POST: account/register");
+    logger.info("POST: account/register");
 
     const {username, password, name, address, role} = req.body; //destruct the stuff we want from data. doesnt matter if there's extra nonsense in there.
     let data = await accountFuncs.registerAccount({username, password, name, address, role});
 
     if (!data.isValid)
     {
+        logger.warn(`   
+            POST failed: ${data.message}`);
         res.status(400).json({ message: "User registration failed.", data});
         return; //this is needed to not crash the run
     }
@@ -52,13 +53,15 @@ app.post("/account/register", async (req, res) =>  //======================REGIS
 
 app.post("/account/login", async (req, res) => //======================LOGIN TO AN ACCOUNT
 {
-    console.log("POST: account/login");
+    logger.info("POST: account/login");
 
     const {username, password} = req.body;
     let data = await accountFuncs.logInToAccount({username, password});
 
     if (!data.isValid)
     {
+        logger.warn(`u:${username}:   
+            POST failed: ${data.message}`);
         res.status(400).json({ message: "User login failed.", data });
         return; //this is needed to not crash the run
     }
@@ -71,13 +74,15 @@ app.post("/account/login", async (req, res) => //======================LOGIN TO 
 //==================================================================EMPLOYEE FUNCS
 app.post("/account/ticket/submit", accountFuncs.authenticateToken, async (req, res) => //======================CREATE A TICKET
 {
-    console.log("POST: account/ticket/submit");
+    logger.info("POST: account/ticket/submit");
 
     const ticket = {...req.body, username: req.user.username};
     let data = await employeeFuncs.submitTicket( ticket );
 
     if (!data.isValid)
     {
+        logger.warn(`u:${req.user.username}:   
+            POST failed: ${data.message}`);
         res.status(400).json({ message: "Ticket submission failed.", data });
         return; //this is needed to not crash the run
     }
@@ -85,15 +90,17 @@ app.post("/account/ticket/submit", accountFuncs.authenticateToken, async (req, r
     res.status(201).json({ message: "Ticket submission success.", data });
 });
 
-app.get("/account/ticket/list", accountFuncs.authenticateToken, async (req, res) => //======================CREATE A TICKET
+app.get("/account/ticket/list", accountFuncs.authenticateToken, async (req, res) => //======================GET ALL TICKETS ASSOC W THIS ACCOUNT
 {
-    console.log("GET: account/ticket/list");
+    logger.info("GET: account/ticket/list");
 
     let data = await employeeFuncs.viewTickets( req.user.username );
 
     if (!data)
     {
-        res.status(400).json({ message: "Ticket get-all failed.", data });
+        logger.warn(`u:${req.user.username}:   
+            GET failed: no content gotten!`);
+        res.status(400).json({ message: "Ticket get-all failed."});
         return; //this is needed to not crash the run
     }
 
@@ -106,10 +113,12 @@ app.get("/account/ticket/list", accountFuncs.authenticateToken, async (req, res)
 //still need to implement check if the user is a manager. could do through middleware, or maybe add role to the jwt
 app.get("/manager/ticket/list", accountFuncs.authenticateToken, async (req, res) => //======================GET ALL PENDING TICKETS
 {
-    console.log("GET: manager/ticket/list");
+    logger.info("GET: manager/ticket/list");
 
     if (req.user.role !== "manager")
     {
+        logger.warn(`u:${req.user.username}:   
+            GET failed, user not a manager!`);
         res.status(400).json({ message: "You're not a manager!" });
         return; //this is needed to not crash the run
     }
@@ -118,7 +127,9 @@ app.get("/manager/ticket/list", accountFuncs.authenticateToken, async (req, res)
 
     if (!data)
     {
-        res.status(400).json({ message: "Ticket get-all failed.", data });
+        logger.warn(`   
+            GET failed: no content gotten!`);
+        res.status(400).json({ message: "Ticket get-all failed."});
         return; //this is needed to not crash the run
     }
 
@@ -127,10 +138,12 @@ app.get("/manager/ticket/list", accountFuncs.authenticateToken, async (req, res)
 
 app.put("/manager/ticket", accountFuncs.authenticateToken, async (req, res) => //======================UPDATE A TICKET
 {
-    console.log("PUT: manager/ticket");
+    logger.info("PUT: manager/ticket");
 
     if (req.user.role !== "manager")
     {
+        logger.warn(`u:${req.user.username}:   
+            PUT failed, user not a manager!`);
         res.status(403).json({ message: "You're not a manager!" });
         return; //this is needed to not crash the run
     }
@@ -141,6 +154,8 @@ app.put("/manager/ticket", accountFuncs.authenticateToken, async (req, res) => /
 
     if (!data || !data.isValid)
     {
+        logger.warn(`u:${req.user.username}:   
+            PUT failed: ${data.message}`);
         res.status(400).json({ message: "Put ticket approval failed.", data });
         return; //this is needed to not crash the run
     }
