@@ -66,38 +66,38 @@ describe("accountFuncs.verifyAccountToRegister(account) testing", () =>
 //========================================================================cleanAccountToRegister(account) 
 describe("accountFuncs.cleanAccountToRegister(account)  testing", () => 
 {
-    test("Account w/ uname,pword should return id and role added", () => 
+    test("Account w/ uname,pword should return id and role added", async () => 
     {
-        let result = accountFuncs.cleanAccountToRegister(validAccounts[0]);
+        let result = await accountFuncs.cleanAccountToRegister(validAccounts[0]);
         expect(result).toEqual({
-             username: "a", password: "b",
+             username: "a", password: expect.anything(),
              id: expect.anything(), role: "employee"
         });
     });
 
-    test("Account w/ uname,pword,adrs,name,role should return id added", () => 
+    test("Account w/ uname,pword,adrs,name,role should return id added", async () => 
     {
-        let result = accountFuncs.cleanAccountToRegister(validAccounts[1]);
+        let result = await accountFuncs.cleanAccountToRegister(validAccounts[1]);
         expect(result).toEqual({
-             username: "a", password: "b", address: "c", name: "d",
+             username: "a", password: expect.anything(), address: "c", name: "d",
              id: expect.anything(), role: "employee"
         });
     });
 
-    test("Account w/ role set to manager should return with it still as manager", () => 
+    test("Account w/ role set to manager should return with it still as manager", async () => 
     {
-        let result = accountFuncs.cleanAccountToRegister(validAccounts[2]);
+        let result = await accountFuncs.cleanAccountToRegister(validAccounts[2]);
         expect(result).toEqual({
-             username: "a", password: "b", address: "c", name: "d",
+             username: "a", password: expect.anything(), address: "c", name: "d",
              id: expect.anything(), role: "manager"
         });
     });
 
-    test("Account w/ extraneous properties should return with them removed", () => 
+    test("Account w/ extraneous properties should return with them removed", async () => 
     {
-        let result = accountFuncs.cleanAccountToRegister(validAccounts[3]);
+        let result = await accountFuncs.cleanAccountToRegister(validAccounts[3]);
         expect(result).toEqual({
-             username: "a", password: "b",
+             username: "a", password: expect.anything(),
              id: expect.anything(), role: "employee"
         });
     });

@@ -14,7 +14,7 @@ async function registerAccount (account)
 
     account = await cleanAccountToRegister(account); //add id and role(if needed), and wash off unneeded params
     
-    let result = accountDAO.registerAccount(account); //pass the account to the accountDAO, which will POST to the DynamoDB
+    let result = await accountDAO.registerAccount(account); //pass the account to the accountDAO, which will POST to the DynamoDB
 
     if (!result)
     {
