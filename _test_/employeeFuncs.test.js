@@ -120,3 +120,37 @@ describe("employeeFuncs.cleanTicketToSubmit(ticket) testing", () =>
        });
     });
 });
+
+describe("employeeFuncs.viewTickets(username) testing", () => 
+{
+    //======================================================================VALID
+    test("Valid username should return content", async () => 
+    {
+        const view = jest.fn(async () => await employeeFuncs.viewTickets("bigdude1000"));
+        
+        let result = await view();
+
+        expect(view).toHaveReturned();
+        expect(result).toBeTruthy();
+    });
+    
+    //======================================================================INVALID
+    test("Invalid username should run but return no content", async () => 
+    {
+        const view = jest.fn(async () => await employeeFuncs.viewTickets("A_BAD_USERNAME"));
+        
+        let result = await view();
+
+        expect(view).toHaveReturned();
+        expect(result).toHaveLength(0);
+    });
+    test("Empty username should run but return no content", async () => 
+    {
+        const view = jest.fn(async () => await employeeFuncs.viewTickets(""));
+        
+        let result = await view();
+
+        expect(view).toHaveReturned();
+        expect(result).toHaveLength(0);
+    });
+});

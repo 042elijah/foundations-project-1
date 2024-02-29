@@ -70,6 +70,12 @@ function cleanTicketToSubmit(ticket)
 
 async function viewTickets (username) //===============================GET ALL TICKETS RELATED TO USER
 {
+    if (!username) 
+    {
+        //console.error("viewTickets(username) got empty username! Cannot call!")
+        return [];
+    }
+
     let ticketAr = await employeeDAO.queryTickets(username);
 
     return ticketAr;
