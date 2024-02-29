@@ -18,7 +18,6 @@ const PORT = 3000;
     |    |     | |     \ |     |
     |    |_____| |_____/ |_____|
 
--implement bcrypt on passwords
 -add functionality to tell whether user is manager or employee
     -can probably add "role" to the jwt auth so we can just extract it
     -or else we can add a func to account to GET a username and check their role that way
