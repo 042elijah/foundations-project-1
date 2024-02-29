@@ -78,8 +78,22 @@ describe("managerFuncs.verifyTicketForTicketApproval(ticket) testing", () =>
 //cleanTicketForApproval (ticket)
 describe("managerFuncs.cleanTicketForApproval(ticket) testing", () => {
     //======================================================================VALID
-    test("", async () => 
+    test("An already clean ticket should return as itself.", () => 
     {
-        expect(true).toBe(true);
+        let result = managerFuncs.cleanTicketForTicketApproval({ username: "a", id: "b", isApproved: true, manager_username:"c" });
+        
+        expect(result).toEqual({
+            username: "a", id: "b",
+            isApproved: true, manager_username: "c"
+       });
+    });
+    test("An ticket with extra data should return without it.", () => 
+    {
+        let result = managerFuncs.cleanTicketForTicketApproval({ username: "a", adffb: "addd", id: "b", isApproved: true, manager_username:"c", aa: "a", num: 5 });
+        
+        expect(result).toEqual({
+            username: "a", id: "b",
+            isApproved: true, manager_username: "c"
+       });
     });
 });
