@@ -22,9 +22,9 @@ const PORT = 3000;
 -add functionality to tell whether user is manager or employee
     -can probably add "role" to the jwt auth so we can just extract it
     -or else we can add a func to account to GET a username and check their role that way
+-implement winston
 -queryEmployees currently returns all data for all calls. should add seperate versions of this call that only return required data
 -broadly implement stronger type checking
--check that all the status codes are right
 */
 
 app.use(express.json());
@@ -67,7 +67,7 @@ app.post("/account/login", async (req, res) => //======================LOGIN TO 
         return; //this is needed to not crash the run
     }
 
-    res.status(201).json({ message: "User logged-in successfully.", token: data.token });
+    res.status(200).json({ message: "User logged-in successfully.", token: data.token });
 });
 
 
@@ -101,7 +101,7 @@ app.get("/account/ticket/list", accountFuncs.authenticateToken, async (req, res)
         return; //this is needed to not crash the run
     }
 
-    res.status(201).json({ message: "Ticket get-all success.", data });
+    res.status(200).json({ message: "Ticket get-all success.", data });
 });
 
 
@@ -120,7 +120,7 @@ app.get("/manager/ticket/list", accountFuncs.authenticateToken, async (req, res)
         return; //this is needed to not crash the run
     }
 
-    res.status(201).json({ message: "Ticket get-all success.", data });
+    res.status(200).json({ message: "Ticket get-all success.", data });
 });
 
 app.put("/manager/ticket", accountFuncs.authenticateToken, async (req, res) => //======================UPDATE A TICKET
