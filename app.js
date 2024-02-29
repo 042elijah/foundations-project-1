@@ -18,9 +18,6 @@ const PORT = 3000;
     |    |     | |     \ |     |
     |    |_____| |_____/ |_____|
 
--add functionality to tell whether user is manager or employee
-    -can probably add "role" to the jwt auth so we can just extract it
-    -or else we can add a func to account to GET a username and check their role that way
 -implement winston
 -queryEmployees currently returns all data for all calls. should add seperate versions of this call that only return required data
 -broadly implement stronger type checking
@@ -76,7 +73,7 @@ app.post("/account/ticket/submit", accountFuncs.authenticateToken, async (req, r
 {
     console.log("POST: account/ticket/submit");
 
-    const ticket = {...req.body, username: req.user.id};
+    const ticket = {...req.body, username: req.user.username};
     let data = await employeeFuncs.submitTicket( ticket );
 
     if (!data.isValid)
@@ -92,7 +89,7 @@ app.get("/account/ticket/list", accountFuncs.authenticateToken, async (req, res)
 {
     console.log("GET: account/ticket/list");
 
-    let data = await employeeFuncs.viewTickets( req.user.id );
+    let data = await employeeFuncs.viewTickets( req.user.username );
 
     if (!data)
     {
@@ -111,6 +108,12 @@ app.get("/manager/ticket/list", accountFuncs.authenticateToken, async (req, res)
 {
     console.log("GET: manager/ticket/list");
 
+    if (req.user.role !== "manager")
+    {
+        res.status(400).json({ message: "You're not a manager!" });
+        return; //this is needed to not crash the run
+    }
+
     let data = await managerFuncs.getAllPendingTickets();
 
     if (!data)
@@ -126,7 +129,13 @@ app.put("/manager/ticket", accountFuncs.authenticateToken, async (req, res) => /
 {
     console.log("PUT: manager/ticket");
 
-    const ticket = {...req.body, manager_username: req.user.id}; //i think ticket will need: employee username, ticket id, isApproved, & manager_username (autopopped)
+    if (req.user.role !== "manager")
+    {
+        res.status(403).json({ message: "You're not a manager!" });
+        return; //this is needed to not crash the run
+    }
+
+    const ticket = {...req.body, manager_username: req.user.username}; //i think ticket will need: employee username, ticket id, isApproved, & manager_username (autopopped)
 
     let data = await managerFuncs.putTicketApproval(ticket);
 

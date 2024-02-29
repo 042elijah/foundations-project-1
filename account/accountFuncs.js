@@ -84,19 +84,20 @@ async function cleanAccountToRegister(account)
 async function logInToAccount (account) 
 {
     //first check to see if account data is valid
-    let accountIsValid = await verifyAccountToLogIn(account); //verifyAccountToLogIn returns metadata about the account data's validity/integrity
-    if (accountIsValid.isValid == false) return accountIsValid; //something is wrong with the data, return message about bad integrity
+    let result = await verifyAccountToLogIn(account); //verifyAccountToLogIn returns metadata about the account data's validity/integrity
+    if (result.isValid == false) return result; //something is wrong with the data, return message about bad integrity
 
+    console.log(result.foundAccount.role);
     const token = jwt.sign(
-        { id: account.username },
+        { username: account.username, role: result.foundAccount.role },
         secretKey,
         { expiresIn: "60m" }
     );
 
-    accountIsValid.isValid = true; //confirmation
-    accountIsValid.isValid = "You're logged in!" //confirmation message
+    result.isValid = true; //confirmation
+    result.isValid = "You're logged in!" //confirmation message
 
-    return {...accountIsValid , token}; //account registered successfully
+    return {...result , token}; //account registered successfully
 }
 
 
@@ -132,7 +133,7 @@ async function verifyAccountToLogIn(account) //TODO: implement better checking. 
         {
             accountIsValid.isValid = true; //passed all checks: account is good to add
             accountIsValid.message = "Username found.";
-            return accountIsValid;
+            return {...accountIsValid, foundAccount};
         }
     }
 }
