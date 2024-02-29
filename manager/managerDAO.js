@@ -65,9 +65,24 @@ async function putTicketApproval (ticket) //=============================ADD NEW
     return null;
 }
 
+async function deleteTicket(ticket)
+{
+    const command = new DeleteCommand({
+        TableName,
+        Key: {
+          username: ticket.username,
+          id: ticket.id
+        },
+      });
+    
+      const data = await documentClient.send(command);
+      return data;
+}
+
 
 module.exports = 
 { 
     getAllPendingTickets,
-    putTicketApproval
+    putTicketApproval,
+    deleteTicket
 };
