@@ -18,7 +18,7 @@ async function submitTicket (ticket) //===============================POST NEW T
 
 
 //take a ticket and make sure all its data is valid
-//checks that it isn't empty, has a positive value for amount, & has a description
+//checks that it isn't empty, has a positive numerical value for amount, & has a description
 function verifyTicketToSubmit (ticket) 
 {
     let ticketIsValid = {};
@@ -28,12 +28,12 @@ function verifyTicketToSubmit (ticket)
         ticketIsValid.isValid = false;
         ticketIsValid.message = "Empty ticket!";
     }
-    else if (!ticket.amount || ticket.amount < 0)
+    else if (!ticket.amount || ticket.amount < 0 || typeof ticket.amount !== "number")
     {
         ticketIsValid.isValid = false;
         ticketIsValid.message = "Invalid reimbursement amount!";
     }
-    else if (!ticket.description)
+    else if (!ticket.description || !ticket.username)
     {
         ticketIsValid.isValid = false;
         ticketIsValid.message = "Empty description field!";

@@ -17,13 +17,15 @@ const PORT = 3000;
  _______  _____  ______   _____ 
     |    |     | |     \ |     |
     |    |_____| |_____/ |_____|
+
+-implement bcrypt on passwords
+-add functionality to tell whether user is manager or employee
+    -can probably add "role" to the jwt auth so we can just extract it
+    -or else we can add a func to account to GET a username and check their role that way
+-queryEmployees currently returns all data for all calls. should add seperate versions of this call that only return required data
+-broadly implement stronger type checking
+-check that all the status codes are right
 */
-//-implement jest testing for employeeFuncs.js
-//-implement bcrypt on passwords
-//-add functionality to tell whether use is manager or employee
-//  -can probably add "role" to the jwt auth so we can just extract it
-//  -or else we can add a func to account to GET a username and check their role that way
-//-queryEmployees currently returns all data for all calls. should add seperate versions of this call that only return required data
 
 app.use(express.json());
 
