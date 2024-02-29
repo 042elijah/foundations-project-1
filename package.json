@@ -9,6 +9,10 @@
   "scripts": {
     "test": "jest"
   },
+  "jest": {
+      "collectCoverage": true,
+      "coverageReporters": ["json", "html"]
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/042elijah/foundations-project-1.git"
