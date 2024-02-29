@@ -8,7 +8,7 @@ async function initializeTestTicket ()
     const ticket0 = await employeeFuncs.submitTicket ({ 
         username: "a",
         description: "b",
-        amount: "1"
+        amount: 1
     });
     
     ticketAr.push(ticket0);
