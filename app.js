@@ -20,6 +20,7 @@ const PORT = 3000;
 */
 //-implement further jest testing
 //-implement bcrypt on passwords
+//-be able to tell whether use is manager or employee
 
 app.use(express.json());
 
@@ -30,7 +31,7 @@ app.get("/", (req, res) => //======================DEFAULT
 });
 
 
-//GENERAL ACCOUNT FUNCS
+//============================================GENERAL ACCOUNT FUNCS
 app.post("/account/register", async (req, res) =>  //======================REGISTER AN ACCOUNT
 {
     console.log("POST: account/register");
@@ -66,7 +67,7 @@ app.post("/account/login", async (req, res) => //======================LOGIN TO 
 
 
 
-//EMPLOYEE FUNCS
+//==================================================================EMPLOYEE FUNCS
 app.post("/account/ticket/submit", accountFuncs.authenticateToken, async (req, res) => //======================CREATE A TICKET
 {
     console.log("POST: account/ticket/submit");
@@ -100,8 +101,8 @@ app.get("/account/ticket/list", accountFuncs.authenticateToken, async (req, res)
 
 
 
-//MANAGER FUNCS
-//still need to check if the user is a manager. could do through middleware, or maybe add role to the jwt
+//==================================================================MANAGER FUNCS
+//still need to implement check if the user is a manager. could do through middleware, or maybe add role to the jwt
 app.get("/manager/ticket/list", accountFuncs.authenticateToken, async (req, res) => //======================GET ALL PENDING TICKETS
 {
     console.log("GET: manager/ticket/list");
@@ -133,6 +134,9 @@ app.put("/manager/ticket", accountFuncs.authenticateToken, async (req, res) => /
 
     res.status(201).json({ message: "Put ticket approval success.", data });
 });
+
+
+
 
 app.listen(PORT, () => 
 {

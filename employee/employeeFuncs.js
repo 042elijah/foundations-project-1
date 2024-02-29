@@ -17,7 +17,9 @@ async function submitTicket (ticket) //===============================POST NEW T
 }
 
 
-function verifyTicketToSubmit (ticket)
+//take a ticket and make sure all its data is valid
+//checks that it isn't empty, has a positive value for amount, & has a description
+function verifyTicketToSubmit (ticket) 
 {
     let ticketIsValid = {};
 
@@ -46,6 +48,7 @@ function verifyTicketToSubmit (ticket)
 }
 
 
+//take some raw data and make sure it conforms to the specific values we want in the database
 function cleanTicketToAdd(ticket) 
 {
     let cleanedTicket = { // is this kludge? idk.

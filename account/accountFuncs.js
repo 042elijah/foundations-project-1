@@ -90,7 +90,7 @@ async function logInToAccount (account)
 
 //checks whether the paramd account is valid to login to
 //TESTED
-async function verifyAccountToLogIn(account) //TODO: implement better checking. data validity and that kind of thing
+async function verifyAccountToLogIn(account) //TODO: implement better checking. more data validity and that kind of thing
 { 
     let accountIsValid = {};
     
@@ -98,6 +98,7 @@ async function verifyAccountToLogIn(account) //TODO: implement better checking. 
     {
         accountIsValid.isValid  = false;
         accountIsValid.message = "Missing username or password.";
+        return accountIsValid;
     }
     else //check to see if account exists in database
     {
@@ -107,20 +108,21 @@ async function verifyAccountToLogIn(account) //TODO: implement better checking. 
         {
             accountIsValid.isValid = false;
             accountIsValid.message = "No such username registered.";
+            return accountIsValid;
         } 
         else if (account.username !== foundAccount.username || account.password !== foundAccount.password) //if foundAccount is empty, that account name doesnt exist in the db. fail.
         {
             accountIsValid.isValid = false;
             accountIsValid.message = "Username and password don't match!";
+            return accountIsValid;
         } 
         else 
         {
             accountIsValid.isValid = true; //passed all checks: account is good to add
             accountIsValid.message = "Username found.";
-            console.log("-authed-");
+            return accountIsValid;
         }
     }
-    return accountIsValid;
 }
 
 
