@@ -4,3 +4,4 @@ node_modules/
 /secretKey.js
 .vs
 coverage
+logs
