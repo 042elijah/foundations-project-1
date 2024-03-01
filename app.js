@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const accountFuncs = require("./account/accountFuncs");
 const employeeFuncs = require("./employee/employeeFuncs");
 const managerFuncs = require("./manager/managerFuncs");
+
 const app = express();
 const PORT = 3000;
 

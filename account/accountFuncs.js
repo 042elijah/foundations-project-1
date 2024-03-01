@@ -35,7 +35,7 @@ async function registerAccount (account)
 
 //checks whether the paramd account is valid to add as a new user
 //TESTED
-async function verifyAccountToRegister(account) //TODO: implement better checking. data validity and that kind of thinkg
+async function verifyAccountToRegister(account) 
 { 
     let accountIsValid = {};
 
