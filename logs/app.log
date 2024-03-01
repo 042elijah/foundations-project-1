@@ -54,3 +54,6 @@
 2024-02-29T20:33:48.745Z [warn]: u:w1ldch1ld:   
             PUT failed: Couldn't find that ticket in the database.
 2024-02-29T20:33:51.775Z [info]: POST: account/login
+2024-03-01T15:03:26.769Z [info]: POST: account/register
+2024-03-01T15:03:27.180Z [warn]:    
+            POST failed: Username taken!

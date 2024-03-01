@@ -110,7 +110,6 @@ app.get("/account/ticket/list", accountFuncs.authenticateToken, async (req, res)
 
 
 //==================================================================MANAGER FUNCS
-//still need to implement check if the user is a manager. could do through middleware, or maybe add role to the jwt
 app.get("/manager/ticket/list", accountFuncs.authenticateToken, async (req, res) => //======================GET ALL PENDING TICKETS
 {
     logger.info("GET: manager/ticket/list");
@@ -148,7 +147,7 @@ app.put("/manager/ticket", accountFuncs.authenticateToken, async (req, res) => /
         return; //this is needed to not crash the run
     }
 
-    const ticket = {...req.body, manager_username: req.user.username}; //i think ticket will need: employee username, ticket id, isApproved, & manager_username (autopopped)
+    const ticket = {...req.body, manager_username: req.user.username}; //ticket will need: employee username, ticket id, isApproved, & manager_username (autopopped)
 
     let data = await managerFuncs.putTicketApproval(ticket);
 
