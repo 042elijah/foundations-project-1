@@ -57,3 +57,6 @@
 2024-03-01T15:03:26.769Z [info]: POST: account/register
 2024-03-01T15:03:27.180Z [warn]:    
             POST failed: Username taken!
+2024-03-01T15:25:57.950Z [info]: POST: account/login
+2024-03-01T15:25:57.957Z [warn]: u::   
+            POST failed: Missing username or password.

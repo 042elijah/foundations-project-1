@@ -122,7 +122,7 @@ async function verifyAccountToLogIn(account) //TODO: implement better checking. 
         if (!foundAccount) //if foundAccount is empty, that account name doesnt exist in the db. fail.
         {
             accountIsValid.isValid = false;
-            accountIsValid.message = "No such username registered.";
+            accountIsValid.message = "Username and password don't match!";
             return accountIsValid;
         } 
         else if (account.username !== foundAccount.username || !(await bcrypt.compare(account.password, foundAccount.password))) //if foundAccount is empty, that account name doesnt exist in the db. fail.
