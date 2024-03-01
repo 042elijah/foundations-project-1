@@ -60,3 +60,18 @@
 2024-03-01T15:25:57.950Z [info]: POST: account/login
 2024-03-01T15:25:57.957Z [warn]: u::   
             POST failed: Missing username or password.
+2024-03-01T17:43:17.851Z [info]: POST: account/register
+2024-03-01T17:43:50.710Z [info]: POST: account/login
+2024-03-01T17:44:06.814Z [info]: POST: account/ticket/submit
+2024-03-01T17:44:27.057Z [info]: GET: account/ticket/list
+2024-03-01T17:44:41.291Z [info]: POST: account/login
+2024-03-01T17:44:54.730Z [info]: GET: manager/ticket/list
+2024-03-01T17:45:42.638Z [info]: POST: account/register
+2024-03-01T17:45:42.729Z [warn]:    
+            POST failed: Username taken!
+2024-03-01T17:45:49.349Z [info]: POST: account/login
+2024-03-01T17:45:49.525Z [warn]: u:bigdude1000:   
+            POST failed: Username and password don't match!
+2024-03-01T17:46:01.318Z [info]: POST: account/login
+2024-03-01T17:46:01.319Z [warn]: u::   
+            POST failed: Missing username or password.
